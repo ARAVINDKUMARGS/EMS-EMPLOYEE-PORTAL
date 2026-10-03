@@ -58,6 +58,12 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok", service: "Nexus HR Backend API", timestamp: new Date() });
 });
 
+// Global error handling middleware for serverless safety
+app.use((err, req, res, next) => {
+  console.error("Express Error Handler caught:", err);
+  res.status(500).json({ message: err.message || "Internal server error" });
+});
+
 const PORT = process.env.PORT || 5000;
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
