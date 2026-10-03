@@ -11,4 +11,4 @@ export const uploadDocument = (formData) =>
 
 export const deleteDocument = (id) => api.delete(`/documents/${id}`);
 
-export const FILE_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+export const FILE_BASE_URL = import.meta.env.VITE_API_URL || "/api";
