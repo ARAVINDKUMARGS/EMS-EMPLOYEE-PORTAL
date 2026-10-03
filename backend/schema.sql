@@ -1,20 +1,16 @@
-chema · SQL
 CREATE DATABASE IF NOT EXISTS ems_db;
 USE ems_db;
- 
+
 -- ---------------- DEPARTMENTS ----------------
- 
 CREATE TABLE IF NOT EXISTS departments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
- 
+
 INSERT IGNORE INTO departments (name) VALUES
     ('Engineering'), ('Human Resources'), ('Sales'), ('Marketing'), ('Finance'), ('Operations');
- 
+
 -- ---------------- EMPLOYEES / USERS ----------------
--- One table serves both as the login identity and the employee profile record.
- 
 CREATE TABLE IF NOT EXISTS employees (
     id INT AUTO_INCREMENT PRIMARY KEY,
     employee_id VARCHAR(50) NOT NULL UNIQUE,
@@ -31,9 +27,10 @@ CREATE TABLE IF NOT EXISTS employees (
     date_of_joining DATE NULL,
     status ENUM('Active','Inactive') NOT NULL DEFAULT 'Active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
+    FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
 );
- 
+
+-- ---------------- ATTENDANCE ----------------
 CREATE TABLE IF NOT EXISTS attendance (
     id INT AUTO_INCREMENT PRIMARY KEY,
     employee_id VARCHAR(50) NOT NULL,
@@ -45,9 +42,8 @@ CREATE TABLE IF NOT EXISTS attendance (
     status VARCHAR(20) DEFAULT 'Present',
     UNIQUE KEY unique_employee_day (employee_id, attendance_date)
 );
- 
+
 -- ---------------- LEAVE REQUESTS ----------------
- 
 CREATE TABLE IF NOT EXISTS leave_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     employee_id VARCHAR(50) NOT NULL,
@@ -60,9 +56,8 @@ CREATE TABLE IF NOT EXISTS leave_requests (
     reviewed_by VARCHAR(50) NULL,
     reviewed_at TIMESTAMP NULL
 );
- 
--- ---------------- PASSWORD RESET OTPS ----------------
- 
+
+-- ---------------- PASSWORD RESETS ----------------
 CREATE TABLE IF NOT EXISTS password_resets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(150) NOT NULL,
@@ -73,8 +68,7 @@ CREATE TABLE IF NOT EXISTS password_resets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ---------------- EXTENDED PROFILE DETAILS ----------------
-
+-- ---------------- EMPLOYEE PROFILE DETAILS ----------------
 CREATE TABLE IF NOT EXISTS employee_profile (
     employee_id VARCHAR(50) PRIMARY KEY,
     dob DATE NULL,
@@ -87,11 +81,10 @@ CREATE TABLE IF NOT EXISTS employee_profile (
     employment_type VARCHAR(50) DEFAULT 'Full Time',
     manager VARCHAR(100) NULL,
     work_location VARCHAR(100) NULL,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
 );
 
--- ---------------- EMPLOYEE DOCUMENTS ----------------
-
+-- ---------------- DOCUMENTS ----------------
 CREATE TABLE IF NOT EXISTS employee_documents (
     id INT AUTO_INCREMENT PRIMARY KEY,
     employee_id VARCHAR(50) NOT NULL,
@@ -101,18 +94,16 @@ CREATE TABLE IF NOT EXISTS employee_documents (
     status ENUM('Approved','Pending','Expired') NOT NULL DEFAULT 'Pending',
     expiry_date DATE NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
 );
 
-ALTER TABLE password_resets ADD COLUMN purpose VARCHAR(20) NOT NULL DEFAULT 'reset';
-
-
+-- ---------------- SKILLS & CONTACTS ----------------
 CREATE TABLE IF NOT EXISTS employee_skills (
     id INT AUTO_INCREMENT PRIMARY KEY,
     employee_id VARCHAR(50) NOT NULL,
     skill_name VARCHAR(100) NOT NULL,
     level INT NOT NULL DEFAULT 50,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS employee_emergency_contacts (
@@ -123,8 +114,91 @@ CREATE TABLE IF NOT EXISTS employee_emergency_contacts (
     relationship VARCHAR(50),
     phone VARCHAR(20),
     email VARCHAR(150),
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE,
     UNIQUE KEY unique_contact_type (employee_id, contact_type)
 );
--- Optional: quick test row so you can confirm the API works immediately
--- INSERT INTO attendance (employee_id, attendance_date, status) VALUES ('EMP001', CURDATE(), 'Present');
+
+-- ---------------- TASKS ----------------
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT NULL,
+    assigned_to VARCHAR(50) NOT NULL,
+    created_by VARCHAR(50) NOT NULL,
+    status ENUM('Pending','In Progress','Completed') DEFAULT 'Pending',
+    priority ENUM('Low','Medium','High') DEFAULT 'Medium',
+    due_date DATE NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------- PAYROLL ----------------
+CREATE TABLE IF NOT EXISTS payroll (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id VARCHAR(50) NOT NULL,
+    month_year VARCHAR(20) NOT NULL,
+    basic_salary DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    allowances DECIMAL(10,2) DEFAULT 0.00,
+    deductions DECIMAL(10,2) DEFAULT 0.00,
+    net_pay DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status ENUM('Paid','Pending','Processing') DEFAULT 'Pending',
+    pay_date DATE NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------- NOTIFICATIONS ----------------
+CREATE TABLE IF NOT EXISTS notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(150) NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    message TEXT NOT NULL,
+    category VARCHAR(50) DEFAULT 'General',
+    is_read TINYINT(1) DEFAULT 0,
+    is_pinned TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------- CHAT MESSAGES ----------------
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id VARCHAR(50) NOT NULL,
+    receiver_id VARCHAR(50) NOT NULL,
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------- RECRUITMENT ----------------
+CREATE TABLE IF NOT EXISTS job_postings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    location VARCHAR(100) DEFAULT 'Remote',
+    type VARCHAR(50) DEFAULT 'Full-Time',
+    status ENUM('Active','Closed') DEFAULT 'Active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS job_applicants (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    job_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    stage ENUM('Applied','Screening','Interview','Hired','Rejected') DEFAULT 'Applied',
+    applied_date DATE DEFAULT (CURRENT_DATE),
+    FOREIGN KEY (job_id) REFERENCES job_postings(id) ON DELETE CASCADE
+);
+
+-- ---------------- AUDIT LOGS ----------------
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user VARCHAR(150) NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    ip VARCHAR(50) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------- SYSTEM SETTINGS ----------------
+CREATE TABLE IF NOT EXISTS system_settings (
+    setting_key VARCHAR(100) PRIMARY KEY,
+    setting_value TEXT NOT NULL
+);

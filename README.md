@@ -1,121 +1,124 @@
-# Nexus HR — Employee Management System
+# EMS — Employee Management Portal
 
-Nexus HR is a fully functional, production-ready, full-stack Employee Management System built with **React**, **Node.js/Express**, and a dedicated **MySQL** database (`nexus_hr_db`).
+A full-stack, production-ready Employee Management System built with **React 18**, **Node.js/Express**, and **MySQL**. Deployed on Vercel with serverless API functions (`/api`) and role-based access control (RBAC).
 
-It features 3 distinct role-based portals — **Employee**, **HR**, and **Admin** — covering all 24 core HR operating modules with database persistence, zero hardcoded business mock data, password hashing, and role-based access control (RBAC).
+Live Demo: [https://ems-employee-portal.vercel.app](https://ems-employee-portal.vercel.app)
+GitHub: [https://github.com/ARAVINDKUMARGS/EMS-EMPLOYEE-PORTAL](https://github.com/ARAVINDKUMARGS/EMS-EMPLOYEE-PORTAL)
 
 ---
 
 ## 🛠️ Technology Stack
-
-- **Frontend**: React 18, Vite, React Router v6, Tailwind CSS, shadcn/ui, Recharts, Axios, Sonner.
-- **Backend**: Node.js, Express, MySQL (`mysql2` connection pool), JWT Auth, Bcryptjs, Multer (file upload storage), Nodemailer (OTP emails).
-- **Database**: MySQL 8.0+ (`nexus_hr_db`), InnoDB, `utf8mb4` character set.
-
----
-
-## 🔑 Demo Accounts & Credentials
-
-The system includes pre-seeded demo accounts with securely hashed passwords:
-
-| Role | Email | Password | Scope & Permissions |
-|---|---|---|---|
-| **Admin** | `admin@nexus.com` | `admin123` | Complete administrative control, user approvals, audit logs, system settings, company analytics |
-| **HR** | `hr@nexus.com` | `hr123456` | HR Dashboard, Employee approvals, Department management, Leave review, Recruitment pipeline |
-| **Employee** | `emp@nexus.com` | `emp123456` | Personal portal, Attendance check-in/out, Leave requests, Documents, Tasks, Payroll, Training |
+- **Frontend**: React 18, Vite, React Router v6, Tailwind CSS, Recharts, Axios, Lucide Icons, Sonner.
+- **Backend**: Node.js, Express, MySQL (`mysql2` pool), JWT Authentication, Bcryptjs, Multer, Nodemailer.
+- **Database**: Remote / Cloud MySQL (`ems_db`), InnoDB, UTF-8.
 
 ---
 
-## 🚀 Fully Functional Modules
+## ⚙️ Local Setup Instructions
 
-1. **Authentication & RBAC**: Signup, Login, Password Reset OTP, JWT token authorization, Admin/HR signup review workflow.
-2. **Employee Management**: Profile management, skills, emergency contacts, status updates, search & filter.
-3. **Department Management**: Department creation, manager assignments, budget allocations, live headcount metrics.
-4. **Attendance System**: Real-time clock-in/out, break duration tracking, history, calendar views, daily/monthly summaries.
-5. **Leave Management**: Leave application submission, status approval/rejection with remarks, balance tracking.
-6. **Document Portal**: Multer file uploads for contracts & certificates, role-restricted downloads & deletion.
-7. **Task Management**: Task creation, employee assignment, priority levels, due dates, Kanban board & list views, completion toggle.
-8. **Payroll Processing**: Itemized monthly payslips, basic salary, allowances, deductions, YTD summaries, batch payroll execution.
-9. **Performance Management**: Evaluation period ratings, strengths/feedback, employee performance goals & progress.
-10. **Training & Certifications**: Course enrollment, learning progress bar, hours learned tracking, certificate logging.
-11. **Notifications Broadcast**: Global company announcements and targeted employee alerts with pinned cards and read tracking.
-12. **Chat & Messaging**: Direct messaging between employees, text and file attachments, persistent chat history.
-13. **Recruitment Pipeline**: Active job postings, candidate applications, recruitment pipeline stages (Applied, Screening, Interviewing, Offer), interview scheduling.
-14. **Company Dashboards**: Role-specific Employee, HR, and Admin dashboards with real database aggregations.
-15. **Audit Logging**: Immutable security log recording user actions, targets, module context, and severity.
-16. **System Settings**: Database configuration parameters, data backup triggers, security toggles.
-
----
-
-## 🗄️ Database Architecture (`nexus_hr_db`)
-
-The database structure is located in:
-- `database/schema.sql` — Schema definition for all 28 relational tables.
-- `database/seed.sql` — Realistic demo data insertion.
-- `database/README.md` — Detailed table relationships and entity documentation.
-
-### Quick Database Setup:
+### 1. Clone & Install Dependencies
 ```bash
-# 1. Create schema
-mysql -u root -p < database/schema.sql
+git clone https://github.com/ARAVINDKUMARGS/EMS-EMPLOYEE-PORTAL.git
+cd EMS-EMPLOYEE-PORTAL
 
-# 2. Seed development data
-mysql -u root -p nexus_hr_db < database/seed.sql
-```
-*Alternatively, run the automated setup script:*
-```bash
-npm run setup-db --prefix backend
+# Install root & frontend dependencies
+npm install
+
+# Install backend dependencies
+cd backend && npm install && cd ..
 ```
 
----
-
-## ⚙️ Project Setup & Launch
-
-### 1. Environment Configuration
-
-Copy the example environment files:
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env`:
 ```bash
-cp backend/.env.example backend/.env
 cp .env.example .env
+cp backend/.env.example backend/.env
 ```
 
-Configure `backend/.env`:
-```env
+Configure local environment in `backend/.env`:
+```ini
 PORT=5000
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=nexus_hr_db
-JWT_SECRET=super_secret_jwt_key_nexus_hr_2026
+DB_PASSWORD=your_local_password
+DB_NAME=ems_db
+JWT_SECRET=your_dev_secret_key_32_characters_minimum
 CLIENT_URL=http://localhost:5173
 ```
 
-### 2. Install & Start Backend API Server
+### 3. Database Migration & Setup
+Import the complete SQL schema:
 ```bash
-cd backend
-npm install
-npm start
+mysql -u root -p < backend/schema.sql
 ```
-*Runs on `http://localhost:5000`*
-
-### 3. Install & Start Frontend Web App
+Alternatively, execute database setup script:
 ```bash
-npm install
+node backend/scripts/setupDatabase.js
+```
+Seed demo accounts (Admin, HR, Employee):
+```bash
+node backend/seedDemoData.js
+```
+
+### 4. Start Local Development
+Start backend server:
+```bash
+cd backend && npm run dev
+```
+Start frontend server:
+```bash
 npm run dev
 ```
-*Runs on `http://localhost:5173`*
+Frontend runs at `http://localhost:5173` and connects to API at `http://localhost:5000`.
+
+---
+
+## 🚀 Vercel Production Deployment Instructions
+
+### 1. Repository Connection
+- Import [https://github.com/ARAVINDKUMARGS/EMS-EMPLOYEE-PORTAL](https://github.com/ARAVINDKUMARGS/EMS-EMPLOYEE-PORTAL) into Vercel.
+- Framework Preset: **Vite**
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+### 2. Configure Production MySQL Database
+Deploy a remote MySQL instance (e.g., PlanetScale, TiDB Cloud, Aiven, Railway, AWS RDS, or Clever Cloud).
+
+### 3. Vercel Environment Variables
+Add the following in Vercel **Project Settings -> Environment Variables**:
+
+| Variable Name | Value / Purpose |
+|---|---|
+| `DB_HOST` | Remote MySQL host domain |
+| `DB_PORT` | `3306` |
+| `DB_USER` | MySQL database user |
+| `DB_PASSWORD` | MySQL database password |
+| `DB_NAME` | `ems_db` |
+| `JWT_SECRET` | Production secret key for signing JWTs |
+| `CLIENT_URL` | `https://ems-employee-portal.vercel.app` |
+| `EMAIL_HOST` | `smtp.gmail.com` (for OTP emails) |
+| `EMAIL_PORT` | `587` |
+| `EMAIL_USER` | Sender Gmail address |
+| `EMAIL_PASSWORD` | Gmail App Password |
+
+### 4. Verify Deployment
+- Visit `/api/health` endpoint: `https://ems-employee-portal.vercel.app/api/health` (should return `{ status: "ok" }`).
+- Perform authentication test at `https://ems-employee-portal.vercel.app/login`.
 
 ---
 
 ## 🧪 Testing & Verification
-
-Run automated test suite covering database connectivity, table schemas, demo account hashes, and JWT verification:
-```bash
-npm test --prefix backend
-```
-
-Build production bundle:
+Build verification:
 ```bash
 npm run build
 ```
+Backend health check:
+```bash
+curl http://localhost:5000/health
+```
+
+---
+
+## ⚠️ Known Limitations & Deployment Notes
+- File uploads (`uploads/`) on Vercel Serverless Functions use ephemeral filesystem storage. For long-term persistent file uploads in production, configure an S3 bucket or cloud media storage service.
