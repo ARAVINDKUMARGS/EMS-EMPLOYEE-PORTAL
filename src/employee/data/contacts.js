@@ -1,0 +1,58 @@
+const contacts = [
+  {
+    id: 1,
+    name: "Sarah Mitchell",
+    avatar: "SM",
+    online: true,
+    lastMessage: "Thanks! I'll address it now.",
+    time: "10:12 AM",
+    unread: 2,
+  },
+  {
+    id: 2,
+    name: "James Park",
+    avatar: "JP",
+    online: false,
+    lastMessage: "Can we sync tomorrow?",
+    time: "Yesterday",
+    unread: 0,
+  },
+  {
+    id: 3,
+    name: "Lisa Kim",
+    avatar: "LK",
+    online: true,
+    lastMessage: "Your leave has been approved.",
+    time: "Yesterday",
+    unread: 1,
+  },
+  {
+    id: 4,
+    name: "Tom Walker",
+    avatar: "TW",
+    online: false,
+    lastMessage: "Great work on Q2 targets!",
+    time: "Monday",
+    unread: 0,
+  },
+  {
+    id: 5,
+    name: "Emma Wilson",
+    avatar: "EW",
+    online: true,
+    lastMessage: "Let's catch up later.",
+    time: "Monday",
+    unread: 3,
+  },
+  {
+    id: 6,
+    name: "David Brown",
+    avatar: "DB",
+    online: true,
+    lastMessage: "I've pushed the latest changes.",
+    time: "Sunday",
+    unread: 0,
+  },
+];
+
+export default contacts;

@@ -1,0 +1,119 @@
+.performance-page .goals-section {
+  background: #131d2c;
+  border: 1px solid #243248;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.performance-page .goal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.performance-page .goal-card {
+  background: #1a2536;
+  padding: 16px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.performance-page .goal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.performance-page .goal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.performance-page .goal-top h3 {
+  font-size: 15px;
+  width: 70%;
+}
+
+.performance-page .due-date {
+  color: #9aa8be;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.performance-page .goal-progress {
+  height: 10px;
+  background: #243248;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.performance-page .goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  border-radius: 15px;
+  transition: width 1s ease;
+}
+
+.performance-page .goal-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+  align-items: center;
+  font-weight: 600;
+}
+
+.performance-page .priority {
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+}
+
+.performance-page .priority.high {
+  background: #4b1d1d;
+  color: #ff6b6b;
+}
+
+.performance-page .priority.medium {
+  background: #3d3520;
+  color: #fbbf24;
+}
+
+.performance-page .priority.low {
+  background: #143322;
+  color: #34d399;
+}
+
+.performance-page .goal-footer .status {
+  padding: 6px 14px;
+  border-radius: 25px;
+  font-size: 13px;
+}
+
+.performance-page .goal-footer .status.completed {
+  background: #143322;
+  color: #34d399;
+}
+
+.performance-page .goal-footer .status.in-progress {
+  background: #1c3d66;
+  color: #60a5fa;
+}
+
+.performance-page .goal-footer .status.ongoing {
+  background: #3d3520;
+  color: #fbbf24;
+}
+
+.performance-page .goal-footer .status.planning {
+  background: #3d253d;
+  color: #d8b4fe;
+}
+
+@media (max-width: 768px) {
+  .performance-page .goal-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,39 @@
+.performance-page {
+  min-height: 100vh;
+  background: #08111f;
+  padding: 40px;
+  color: white;
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+.performance-page * {
+  box-sizing: border-box;
+}
+
+.performance-header {
+  margin-bottom: 24px;
+}
+
+.performance-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.performance-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #8a98b3;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .performance-page {
+    padding: 20px;
+  }
+
+  .performance-header h1 {
+    font-size: 24px;
+  }
+}

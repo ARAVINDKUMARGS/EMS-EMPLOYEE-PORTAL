@@ -1,0 +1,81 @@
+.performance-page .score-card {
+  background: #131d2c;
+  border: 1px solid #243248;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.performance-page .section-header {
+  margin-bottom: 18px;
+}
+
+.performance-page .section-header h2 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.performance-page .section-header p {
+  color: #8a98b3;
+  font-size: 13px;
+}
+
+.performance-page .chart {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  height: 240px;
+  padding-top: 12px;
+}
+
+.performance-page .bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+}
+
+.performance-page .percentage {
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+}
+
+.performance-page .bar-bg {
+  width: 32px;
+  height: 160px;
+  background: #243248;
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.performance-page .bar-fill {
+  width: 100%;
+  border-radius: 12px;
+  animation: performanceGrowBar 1.3s ease;
+}
+
+.performance-page .bar-item p {
+  margin-top: 10px;
+  font-size: 12px;
+  text-align: center;
+  color: #b4c2d3;
+}
+
+@keyframes performanceGrowBar {
+  from {
+    height: 0;
+  }
+}
+
+.performance-page .bar-item:hover {
+  transform: translateY(-5px);
+  transition: 0.3s;
+}
+
+.performance-page .bar-fill:hover {
+  filter: brightness(1.2);
+}

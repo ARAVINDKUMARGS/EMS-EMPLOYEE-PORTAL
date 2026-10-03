@@ -1,0 +1,25 @@
+.personal-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.personal-left {
+  flex: 0 0 320px;
+}
+
+.personal-right {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .personal-container {
+    flex-direction: column;
+  }
+
+  .personal-left,
+  .personal-right {
+    width: 100%;
+  }
+}

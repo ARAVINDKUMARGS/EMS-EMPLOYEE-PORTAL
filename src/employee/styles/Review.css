@@ -1,0 +1,81 @@
+.performance-page .review-section {
+  background: #131d2c;
+  border: 1px solid #243248;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.performance-page .table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.performance-page table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.performance-page thead {
+  background: #1a2536;
+}
+
+.performance-page th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 12px;
+  color: #a7b4c8;
+}
+
+.performance-page td {
+  padding: 12px 14px;
+  border-top: 1px solid #243248;
+  font-size: 13px;
+}
+
+.performance-page tbody tr {
+  transition: 0.3s;
+}
+
+.performance-page tbody tr:hover {
+  background: #1b2738;
+}
+
+.performance-page .rating-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.performance-page .star {
+  color: #facc15;
+}
+
+.performance-page .table-status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.performance-page .table-status.completed {
+  background: #143322;
+  color: #34d399;
+}
+
+.performance-page .table-status.active {
+  background: #19385d;
+  color: #60a5fa;
+}
+
+.performance-page .table-status.pending {
+  background: #4a2b18;
+  color: #fbbf24;
+}
+
+@media (max-width: 900px) {
+  .performance-page table {
+    min-width: 900px;
+  }
+}

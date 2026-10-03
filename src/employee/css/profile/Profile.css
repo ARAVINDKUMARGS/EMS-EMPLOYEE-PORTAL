@@ -1,0 +1,89 @@
+.profile-page{
+
+    padding:30px;
+
+}
+
+.profile-title h1{
+
+    font-size:34px;
+
+    margin-bottom:8px;
+
+}
+
+.profile-title p{
+
+    color:#94A3B8;
+
+    margin-bottom:30px;
+
+}
+
+.profile-tabs{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:30px;
+
+}
+
+.profile-tabs button{
+
+    border:none;
+
+    cursor:pointer;
+
+    padding:12px 24px;
+
+    border-radius:10px;
+
+    background:#111827;
+
+    color:white;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.profile-tabs button:hover{
+
+    background:#1E293B;
+
+}
+
+.profile-tabs .active{
+
+    background:#2563EB;
+
+}
+
+.profile-content{
+
+    background:#111827;
+
+    border-radius:16px;
+
+    padding:30px;
+
+    min-height:500px;
+
+    border:1px solid #1F2937;
+
+}
+
+.card h2{
+
+    margin-bottom:15px;
+
+}
+
+.card p{
+
+    color:#94A3B8;
+
+}

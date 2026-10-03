@@ -1,0 +1,49 @@
+.performance-stat-card {
+  background: #182235;
+  border: 1px solid #2A3A52;
+  border-radius: 14px;
+  padding: 14px;
+  transition: 0.3s ease;
+}
+
+.performance-stat-card:hover {
+  transform: translateY(-4px);
+  border-color: #3B82F6;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.performance-stat-card h4 {
+  color: #94A3B8;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.performance-stat-card h2 {
+  margin-top: 30px;
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.performance-stat-card p {
+  margin-top: 10px;
+  color: #94A3B8;
+  font-size: 13px;
+}
+
+.icon-box {
+  width: 54px;
+  height: 40px;
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

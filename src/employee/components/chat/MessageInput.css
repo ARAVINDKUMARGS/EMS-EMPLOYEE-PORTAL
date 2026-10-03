@@ -1,0 +1,257 @@
+.message-input-container {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 20px;
+
+  background: #111827;
+
+  border-top: 1px solid #1f2937;
+}
+
+/* ==========================
+   Emoji
+========================== */
+
+.emoji-container {
+  position: relative;
+}
+
+.emoji-picker {
+  position: absolute;
+
+  bottom: 60px;
+
+  left: 0;
+
+  z-index: 999;
+}
+
+/* ==========================
+   Buttons
+========================== */
+
+.action-btn {
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  outline: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #94a3b8;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: .25s;
+}
+
+.action-btn svg {
+  font-size: 20px;
+}
+
+.action-btn:hover {
+
+  background: #1f2937;
+
+  color: white;
+
+}
+
+/* ==========================
+   Input
+========================== */
+
+.input-wrapper {
+
+  flex: 1;
+
+}
+
+.input-wrapper input {
+
+  width: 100%;
+
+  height: 48px;
+
+  border: none;
+
+  outline: none;
+
+  border-radius: 24px;
+
+  background: #1f2937;
+
+  color: white;
+
+  padding: 0 18px;
+
+  font-size: 15px;
+
+}
+
+.input-wrapper input::placeholder {
+
+  color: #94a3b8;
+
+}
+
+.input-wrapper input:focus {
+
+  background: #263244;
+
+}
+
+/* ==========================
+   Send Button
+========================== */
+
+.send-btn {
+
+  width: 48px;
+
+  height: 48px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  transition: .25s;
+
+  box-shadow: 0 5px 15px rgba(37,99,235,.35);
+
+}
+
+.send-btn svg {
+
+  font-size: 18px;
+
+}
+
+.send-btn:hover {
+
+  background: #1d4ed8;
+
+  transform: scale(1.05);
+
+}
+
+.send-btn:active {
+
+  transform: scale(.95);
+
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media(max-width:768px){
+
+.message-input-container{
+
+    padding:12px;
+
+    gap:8px;
+
+}
+
+.action-btn{
+
+    width:38px;
+
+    height:38px;
+
+}
+
+.send-btn{
+
+    width:42px;
+
+    height:42px;
+
+}
+
+.input-wrapper input{
+
+    height:44px;
+
+}
+
+}
+
+
+/* Attachment */
+
+.attachment-preview{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:10px 18px;
+
+    background:#1f2937;
+
+    color:white;
+
+    border-top:1px solid #334155;
+
+}
+
+.attachment-preview button{
+
+    border:none;
+
+    background:transparent;
+
+    color:#94a3b8;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+}
+
+.attachment-preview button:hover{
+
+    color:white;
+
+}
+
+.file-message{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#2563eb;
+    text-decoration:none;
+    font-weight:600;
+    word-break:break-word;
+}
+
+.file-message:hover{
+    text-decoration:underline;
+}
