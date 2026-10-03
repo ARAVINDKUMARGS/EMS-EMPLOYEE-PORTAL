@@ -21,10 +21,12 @@ api.interceptors.request.use(
 // Fallback Mock Data Registry for seamless demo deployment with exact schema matching
 const MOCK_DATA = {
   "/attendance/today": {
-    check_in: "09:00:00",
+    check_in: "2026-10-03T09:00:00.000Z",
     check_out: null,
     status: "Present",
-    date: "2026-10-03"
+    date: "2026-10-03",
+    break_seconds: 900,
+    working_seconds: 28800
   },
   "/attendance/summary": {
     monthly: [
@@ -36,20 +38,63 @@ const MOCK_DATA = {
     ],
     thisMonthPercent: 98
   },
+  "/attendance/history": [
+    { id: 1, date: "2026-10-01", checkIn: "09:00 AM", checkOut: "05:30 PM", status: "Present", totalHours: "8.5 hrs" },
+    { id: 2, date: "2026-10-02", checkIn: "09:15 AM", checkOut: "05:45 PM", status: "Present", totalHours: "8.5 hrs" },
+    { id: 3, date: "2026-10-03", checkIn: "08:55 AM", checkOut: "05:30 PM", status: "Present", totalHours: "8.5 hrs" }
+  ],
+  "/attendance/calendar": [
+    { date: "2026-10-01", status: "Present" },
+    { date: "2026-10-02", status: "Present" },
+    { date: "2026-10-03", status: "Present" }
+  ],
   "/attendance": [
     { id: 1, date: "2026-10-01", checkIn: "09:00 AM", checkOut: "05:30 PM", status: "Present", totalHours: "8.5 hrs" },
     { id: 2, date: "2026-10-02", checkIn: "09:15 AM", checkOut: "05:45 PM", status: "Present", totalHours: "8.5 hrs" },
     { id: 3, date: "2026-10-03", checkIn: "08:55 AM", checkOut: "05:30 PM", status: "Present", totalHours: "8.5 hrs" }
   ],
   "/leave/my": [
-    { id: 1, employee_id: "EMP101", leave_type: "Casual Leave", start_date: "2026-10-10", end_date: "2026-10-12", reason: "Family Event", status: "Approved", days: 3 },
-    { id: 2, employee_id: "EMP101", leave_type: "Sick Leave", start_date: "2026-09-05", end_date: "2026-09-06", reason: "Fever & Rest", status: "Approved", days: 2 },
-    { id: 3, employee_id: "EMP101", leave_type: "Privilege Leave", start_date: "2026-11-20", end_date: "2026-11-25", reason: "Vacation Trip", status: "Pending", days: 5 }
+    { id: 1, employee_id: "EMP101", leave_type: "Casual Leave", start_date: "2026-10-10", end_date: "2026-10-12", applied_at: "2026-10-01", reason: "Family Event", status: "Approved", days: 3 },
+    { id: 2, employee_id: "EMP101", leave_type: "Sick Leave", start_date: "2026-09-05", end_date: "2026-09-06", applied_at: "2026-09-04", reason: "Fever & Rest", status: "Approved", days: 2 },
+    { id: 3, employee_id: "EMP101", leave_type: "Privilege Leave", start_date: "2026-11-20", end_date: "2026-11-25", applied_at: "2026-10-02", reason: "Vacation Trip", status: "Pending", days: 5 }
   ],
   "/leave/all": [
-    { id: 1, employee_id: "EMP101", employee_name: "Rahul Kapoor", leave_type: "Casual Leave", start_date: "2026-10-10", end_date: "2026-10-12", reason: "Family Event", status: "Approved", days: 3 },
-    { id: 2, employee_id: "HR101", employee_name: "Neha Verma", leave_type: "Sick Leave", start_date: "2026-09-05", end_date: "2026-09-06", reason: "Fever & Rest", status: "Approved", days: 2 }
+    { id: 1, employee_id: "EMP101", employee_name: "Rahul Kapoor", leave_type: "Casual Leave", start_date: "2026-10-10", end_date: "2026-10-12", applied_at: "2026-10-01", reason: "Family Event", status: "Approved", days: 3 },
+    { id: 2, employee_id: "HR101", employee_name: "Neha Verma", leave_type: "Sick Leave", start_date: "2026-09-05", end_date: "2026-09-06", applied_at: "2026-09-04", reason: "Fever & Rest", status: "Approved", days: 2 }
   ],
+  "/hr-overview/summary": {
+    totalEmployees: 97,
+    avgAttendanceToday: 95,
+    departmentsCount: 4,
+    pendingLeavesCount: 2
+  },
+  "/hr-overview/attendance-by-department": [
+    { department: "Engineering", attendance: 95 },
+    { department: "Human Resources", attendance: 100 },
+    { department: "Finance", attendance: 92 },
+    { department: "Marketing", attendance: 96 }
+  ],
+  "/hr-overview/headcount-by-department": [
+    { name: "Engineering", value: 42 },
+    { name: "Human Resources", value: 12 },
+    { name: "Finance", value: 18 },
+    { name: "Marketing", value: 25 }
+  ],
+  "/hr-overview/pending-leaves": [
+    { id: 1, employee_id: "EMP101", employee_name: "Rahul Kapoor", leave_type: "Casual Leave", start_date: "2026-10-10", end_date: "2026-10-12", applied_at: "2026-10-01", reason: "Family Event", status: "Pending", days: 3 }
+  ],
+  "/hr-overview": {
+    totalEmployees: 97,
+    avgAttendanceToday: 95,
+    departmentsCount: 4,
+    pendingLeavesCount: 2,
+    departmentDistribution: [
+      { department: "Engineering", count: 42 },
+      { department: "Marketing", count: 25 },
+      { department: "Finance", count: 18 },
+      { department: "HR", count: 12 }
+    ]
+  },
   "/payroll/my": {
     payslip: {
       month: "September 2026",
@@ -129,18 +174,6 @@ const MOCK_DATA = {
     { id: 103, employee_id: "ADM101", name: "Karan Mehta", email: "admin@nexus.com", role: "admin", department: "Operations", approval_status: "Approved" }
   ],
   "/auth/pending-approvals": [],
-  "/hr-overview": {
-    totalEmployees: 97,
-    activeEmployees: 92,
-    pendingApprovals: 3,
-    onLeaveToday: 2,
-    departmentDistribution: [
-      { department: "Engineering", count: 42 },
-      { department: "Marketing", count: 25 },
-      { department: "Finance", count: 18 },
-      { department: "HR", count: 12 }
-    ]
-  },
   "/recruitment": {
     jobPostings: [
       { id: 1, title: "Senior Frontend Developer", department: "Engineering", location: "Bangalore / Remote", type: "Full-Time", status: "Active", applicantsCount: 24 },

@@ -127,7 +127,13 @@ function Dashboard() {
             {dayCompleted
               ? "You've completed your attendance for today."
               : isCheckedIn
-              ? `Checked in at ${new Date(attendanceToday.check_in).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+              ? `Checked in at ${(() => {
+                  const val = attendanceToday?.check_in;
+                  if (!val) return "";
+                  if (typeof val === "string" && (val.includes("AM") || val.includes("PM"))) return val;
+                  const d = new Date(val);
+                  return isNaN(d.getTime()) ? String(val) : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                })()}`
               : "You haven't checked in yet today."}
           </p>
           <div className="mt-5 flex flex-wrap gap-2">

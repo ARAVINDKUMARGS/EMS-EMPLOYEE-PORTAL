@@ -197,13 +197,24 @@ export default function Leave() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {new Date(l.start_date).toLocaleDateString()}
-                    {l.start_date !== l.end_date && ` – ${new Date(l.end_date).toLocaleDateString()}`}
+                    {(() => {
+                      const d = new Date(l.start_date);
+                      return isNaN(d.getTime()) ? String(l.start_date || "—") : d.toLocaleDateString();
+                    })()}
+                    {l.start_date !== l.end_date && ` – ${(() => {
+                      const d = new Date(l.end_date);
+                      return isNaN(d.getTime()) ? String(l.end_date || "—") : d.toLocaleDateString();
+                    })()}`}
                   </td>
                   <td className="px-4 py-3">{daysBetween(l.start_date, l.end_date)}</td>
                   <td className="px-4 py-3 text-muted-foreground">{l.reason || "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {new Date(l.applied_at).toLocaleDateString()}
+                    {(() => {
+                      const val = l.applied_at || l.created_at || l.start_date;
+                      if (!val) return "—";
+                      const d = new Date(val);
+                      return isNaN(d.getTime()) ? String(val) : d.toLocaleDateString();
+                    })()}
                   </td>
                   <td className="px-4 py-3">
                     <StatusPill status={l.status.toLowerCase()} />

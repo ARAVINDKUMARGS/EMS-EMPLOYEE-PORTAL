@@ -45,8 +45,14 @@ function AttendanceStatus({ onAttendanceChange }) {
     setAttendance(res.data);
 
     if (res.data) {
-      setCheckInTime(res.data.check_in ? new Date(res.data.check_in).toLocaleTimeString() : "--");
-      setCheckOutTime(res.data.check_out ? new Date(res.data.check_out).toLocaleTimeString() : "--");
+      const formatTimeVal = (val) => {
+        if (!val || val === "--") return "--";
+        if (typeof val === "string" && (val.includes("AM") || val.includes("PM"))) return val;
+        const d = new Date(val);
+        return isNaN(d.getTime()) ? String(val) : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      };
+      setCheckInTime(res.data.check_in ? formatTimeVal(res.data.check_in) : "--");
+      setCheckOutTime(res.data.check_out ? formatTimeVal(res.data.check_out) : "--");
       setBreakSeconds(res.data.break_seconds || 0);
       setWorkingHours(res.data.working_seconds ? formatTime(res.data.working_seconds) : "--");
     } else {
