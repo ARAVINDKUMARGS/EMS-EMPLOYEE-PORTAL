@@ -1,5 +1,8 @@
 const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, ".env") });
+const safeDirname = typeof __dirname !== "undefined" ? __dirname : process.cwd();
+try {
+  require("dotenv").config({ path: path.join(safeDirname, ".env") });
+} catch (e) {}
 require("dotenv").config();
 
 const express = require("express");
@@ -30,7 +33,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static uploaded files
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(safeDirname, "uploads")));
 
 // Mount API routes
 const router = express.Router();
