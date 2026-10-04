@@ -2,8 +2,7 @@ const db = require("../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { sendOtpEmail } = require("../utils/mailer");
-
-const JWT_SECRET = process.env.JWT_SECRET || "super_secret_jwt_key_nexus_hr_2026";
+const getJwtSecret = require("../utils/jwtSecret");
 
 // Helper for email normalization
 const normalizeEmail = (email) => (email ? String(email).trim().toLowerCase() : "");
@@ -102,12 +101,12 @@ exports.login = async (req, res) => {
         [cleanEmail],
         async (err, rows) => {
             if (err) {
-                console.error("[AUTH ERROR] Login database query failed:", { email: cleanEmail, error: err.message });
-                return res.status(500).json({ message: "Database error during login. Please try again." });
+                console.error("[AUTH ERROR] Login database connection or query failure:", { email: cleanEmail, error: err.message, code: err.code });
+                return res.status(500).json({ message: "Unable to process login at this time." });
             }
 
             if (!rows || rows.length === 0) {
-                console.warn("[AUTH WARN] Login failed - No user record found:", { email: cleanEmail });
+                console.warn("[AUTH WARN] Login failed - Employee record not found:", { email: cleanEmail });
                 return res.status(401).json({ message: "Invalid email or password" });
             }
 
@@ -122,7 +121,7 @@ exports.login = async (req, res) => {
                 }
 
                 if (employee.approval_status === "Pending") {
-                    console.warn("[AUTH WARN] Login blocked - Pending approval:", { email: cleanEmail, employee_id: employee.employee_id });
+                    console.warn("[AUTH WARN] Login blocked - Account pending approval:", { email: cleanEmail, employee_id: employee.employee_id });
                     return res.status(403).json({ message: "Your account is still awaiting approval." });
                 }
 
@@ -144,15 +143,23 @@ exports.login = async (req, res) => {
                     role: employee.role,
                 };
 
-                const token = jwt.sign(user, JWT_SECRET, { expiresIn: "7d" });
+                let secret;
+                try {
+                    secret = getJwtSecret();
+                } catch (configErr) {
+                    console.error("[AUTH ERROR] JWT configuration error during login:", configErr.message);
+                    return res.status(500).json({ message: "Unable to process login at this time." });
+                }
+
+                const token = jwt.sign(user, secret, { expiresIn: "7d" });
 
                 console.log("[AUTH INFO] Login successful:", { employee_id: user.employee_id, email: user.email, role: user.role });
 
                 return res.json({ message: "Login successful", token, user });
 
             } catch (compareErr) {
-                console.error("[AUTH ERROR] Login password compare exception:", { email: cleanEmail, error: compareErr.message });
-                return res.status(500).json({ message: "Something went wrong logging you in" });
+                console.error("[AUTH ERROR] Login password compare or server exception:", { email: cleanEmail, error: compareErr.message });
+                return res.status(500).json({ message: "Unable to process login at this time." });
             }
         }
     );
@@ -416,7 +423,16 @@ exports.verifyLoginOtp = (req, res) => {
                         email: employee.email,
                         role: employee.role,
                     };
-                    const token = jwt.sign(user, JWT_SECRET, { expiresIn: "7d" });
+
+                    let secret;
+                    try {
+                        secret = getJwtSecret();
+                    } catch (configErr) {
+                        console.error("[AUTH ERROR] JWT configuration error during OTP login:", configErr.message);
+                        return res.status(500).json({ message: "Unable to process login at this time." });
+                    }
+
+                    const token = jwt.sign(user, secret, { expiresIn: "7d" });
 
                     res.json({ message: "Login successful", token, user });
                 });

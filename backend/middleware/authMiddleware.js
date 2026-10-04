@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-
-const JWT_SECRET = process.env.JWT_SECRET || "super_secret_jwt_key_nexus_hr_2026";
+const getJwtSecret = require("../utils/jwtSecret");
 
 
 // Verifies the Bearer token and attaches the decoded user to req.user
@@ -14,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, getJwtSecret());
         req.user = decoded;
         next();
     } catch (err) {

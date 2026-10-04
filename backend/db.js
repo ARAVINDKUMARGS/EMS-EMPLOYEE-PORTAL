@@ -4,16 +4,28 @@ const mysql = require("mysql2");
 let pool = null;
 
 try {
+  const host = process.env.DB_HOST || "localhost";
+  const user = process.env.DB_USER || "root";
+  const password = process.env.DB_PASSWORD || "";
+  const database = process.env.DB_NAME || "ems_db";
+  const port = Number(process.env.DB_PORT) || 3306;
+
+  if (!process.env.DB_HOST && (process.env.VERCEL || process.env.NODE_ENV === "production")) {
+    console.error("[CRITICAL DB CONFIG ERROR] DB_HOST environment variable is missing in Vercel settings! Localhost connection will fail in Vercel serverless environment.");
+  }
+
   const poolConfig = {
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME || "nexus_hr_db",
-    port: Number(process.env.DB_PORT) || 3306,
+    host,
+    user,
+    password,
+    database,
+    port,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
     connectTimeout: 10000,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
   };
 
   if (process.env.DB_SSL === "true" || process.env.DB_SSL === "1") {
@@ -32,7 +44,7 @@ const db = {
       values = [];
     }
     if (!pool) {
-      const initErr = new Error("Database connection pool is not initialized.");
+      const initErr = new Error("Database connection pool is not initialized. Check Vercel DB_* environment variables.");
       console.error("[DB ERROR]", initErr.message);
       if (callback) callback(initErr, null);
       return;
@@ -40,7 +52,7 @@ const db = {
     try {
       pool.query(sql, values, (err, results, fields) => {
         if (err) {
-          console.error("[DB ERROR] Query execution error:", err.message);
+          console.error("[DB ERROR] Query execution error:", { error: err.message, code: err.code });
           if (callback) return callback(err, null);
         } else if (callback) {
           callback(null, results, fields);
