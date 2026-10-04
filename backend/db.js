@@ -7,7 +7,7 @@ try {
   const host = process.env.DB_HOST || "localhost";
   const user = process.env.DB_USER || "root";
   const password = process.env.DB_PASSWORD || "";
-  const database = process.env.DB_NAME || "ems_db";
+  const database = process.env.DB_NAME || "nexus_hr_db";
   const port = Number(process.env.DB_PORT) || 3306;
 
   if (!process.env.DB_HOST && (process.env.VERCEL || process.env.NODE_ENV === "production")) {
