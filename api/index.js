@@ -1,4 +1,6 @@
 import app from "../backend/server.js";
 
-export default app;
+const server = app.default || app;
+
+export default server;
 
