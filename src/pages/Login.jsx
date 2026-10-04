@@ -105,7 +105,12 @@ function Login() {
       toast.success(`Welcome, ${user.name}!`);
       navigate(user.role === "admin" ? "/admin" : user.role === "hr" ? "/hr" : "/dashboard");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid email or password");
+      const errorMsg =
+        err.response?.data?.message ||
+        (err.response?.status === 500
+          ? "Server error occurred. Please try again later."
+          : "Invalid email or password");
+      toast.error(errorMsg);
     } finally {
       setIsSubmitting(false);
     }

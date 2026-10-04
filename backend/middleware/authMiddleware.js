@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_me";
+const JWT_SECRET = process.env.JWT_SECRET || "super_secret_jwt_key_nexus_hr_2026";
+
 
 // Verifies the Bearer token and attaches the decoded user to req.user
 exports.verifyToken = (req, res, next) => {

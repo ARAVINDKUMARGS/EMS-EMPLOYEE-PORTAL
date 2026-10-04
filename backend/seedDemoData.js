@@ -28,12 +28,42 @@ async function main() {
 
   const demoPassword = await bcrypt.hash("password123", 10);
 
-  // Exactly one demo account per role.
   const people = [
+    {
+      employee_id: "EMP001",
+      name: "Aravind Kumar",
+      email: "emp@nexus.com",
+      password: "emp123456",
+      role: "employee",
+      department: "Engineering",
+      designation: "Senior Frontend Developer",
+      phone: "+1 (555) 014-4921",
+    },
+    {
+      employee_id: "HR001",
+      name: "Priya Sharma",
+      email: "hr@nexus.com",
+      password: "hr123456",
+      role: "hr",
+      department: "Human Resources",
+      designation: "Senior HR Manager",
+      phone: "+1 (555) 018-9201",
+    },
+    {
+      employee_id: "ADM001",
+      name: "System Administrator",
+      email: "admin@nexus.com",
+      password: "admin123",
+      role: "admin",
+      department: "Operations",
+      designation: "System Administrator",
+      phone: "+1 (555) 019-2831",
+    },
     {
       employee_id: "EMP101",
       name: "Rahul Kapoor",
       email: "rahul.kapoor@nexus.io",
+      password: "password123",
       role: "employee",
       department: "Engineering",
       designation: "Software Engineer",
@@ -43,6 +73,7 @@ async function main() {
       employee_id: "HR101",
       name: "Neha Verma",
       email: "neha.verma@nexus.io",
+      password: "password123",
       role: "hr",
       department: "Human Resources",
       designation: "HR Manager",
@@ -52,6 +83,7 @@ async function main() {
       employee_id: "ADM101",
       name: "Karan Mehta",
       email: "karan.mehta@nexus.io",
+      password: "password123",
       role: "admin",
       department: "Operations",
       designation: "System Administrator",
@@ -60,17 +92,8 @@ async function main() {
   ];
 
   for (const p of people) {
-    await db.query("DELETE FROM employees WHERE email = ? AND employee_id <> ?", [
-      p.email,
-      p.employee_id,
-    ]);
+    const userHash = await bcrypt.hash(p.password, 10);
 
-    await db.query("DELETE FROM employees WHERE employee_id = ? AND email <> ?", [
-      p.employee_id,
-      p.email,
-    ]);
-
-    
     await db.query(
       `INSERT INTO employees (employee_id, name, email, password_hash, role, department_id, designation, phone, date_of_joining, status, approval_status)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, '2023-06-01', 'Active', 'Approved')
@@ -78,7 +101,7 @@ async function main() {
          name=VALUES(name), password_hash=VALUES(password_hash), role=VALUES(role),
          department_id=VALUES(department_id), designation=VALUES(designation), phone=VALUES(phone),
          status='Active', approval_status='Approved'`,
-      [p.employee_id, p.name, p.email, demoPassword, p.role, deptId(p.department), p.designation, p.phone]
+      [p.employee_id, p.name, p.email, userHash, p.role, deptId(p.department), p.designation, p.phone]
     );
     console.log(`✓ ${p.role.toUpperCase()}: ${p.name} (${p.email})`);
   }
